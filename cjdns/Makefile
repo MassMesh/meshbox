@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cjdns
-PKG_VERSION:=0.16
-PKG_RELEASE:=10
+PKG_VERSION:=0.18
+PKG_RELEASE:=13
 
-PKG_SOURCE_URL:=https://github.com/hyperboria/cjdns.git
+PKG_SOURCE_URL:=https://github.com/wfleurant/cjdns.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=0bf4e4b9cd364c4b806e1e382c111ec3cce3d640
+PKG_SOURCE_VERSION:=91407f39a3614d732e57cfbe734e90b29a77cfa2
 PKG_LICENSE:=GPL-3.0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
@@ -20,9 +20,9 @@ define Package/cjdns
 	CATEGORY:=Network
 	SUBMENU:=Routing and Redirection
 	TITLE:=Encrypted near-zero-conf mesh routing protocol
-	URL:=https://github.com/hyperboria/cjdns
-	MAINTAINER:=Lars Gierth <larsg@systemli.org>
-	DEPENDS:=+kmod-tun +kmod-ipv6 +libnl-tiny +libpthread +librt \
+	URL:=https://github.com/cjdelisle/cjdns
+	MAINTAINER:=William Fleurant <Igel@hyperboria.ca>
+	DEPENDS:=+kmod-tun +libnl-tiny +libpthread +librt \
 		+libuci-lua +lua-bencode +dkjson +luasocket +lua-sha2
 endef
 
@@ -47,6 +47,7 @@ PKG_DO_VARS+= UCLIBC=1
 endif
 
 define Build/Compile
+	cd $(PKG_BUILD_DIR) && \
 	CROSS="true" \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)" \
