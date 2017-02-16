@@ -1,23 +1,23 @@
 meshbox
 =======
 
-This is the OpenWRT package feed for the [cjdns][cjdns] routing protocol. It provides OpenWrt integration and a web-based UI. Tested with OpenWRT Barrier Breaker (14.07) and Chaos Calmer (trunk).
+This is the LEDE package feed for the [cjdns][cjdns] routing protocol. It provides LEDE integration and a web-based UI. Tested with LEDE v17.2+
 
-![UI screenshot](https://github.com/SeattleMeshnet/meshbox/raw/ee9340a6421fe0342eda44b23028143923bb65ee/screenshot.png)
+![UI screenshot](https://github.com/bostonmeshnet/meshbox/blob/for-17.02%2Bterrier/screenshot.png)
 
-[cjdns]: https://github.com/hyperboria/cjdns
+[cjdns]: https://github.com/cjdelisle/cjdns
 
 
 Installation
 ------------
 
-We don't provide prebuilt packages yet (help welcome), so you'll have to build OpenWrt yourself. Integration into the OpenWRT buildroot is simple though.
+We don't provide prebuilt packages yet (help welcome), so you'll have to build LEDE yourself. Integration into the LEDE buildroot is simple though.
 
-    $ git clone git://git.openwrt.org/14.07/openwrt.git
-    $ cd openwrt
+    $ git clone git://git.lede-project.org/source.git lede-source
+    $ cd lede-source
 
     $ cp feeds.conf.default feeds.conf
-    $ echo 'src-git meshbox git://github.com/seattlemeshnet/meshbox.git;for-14.07' >> feeds.conf
+    $ echo 'src-git meshbox https://github.com/bostonmeshnet/meshbox.git;for-17.02+terrier' >> feeds.conf
     $ ./scripts/feeds update -a
     $ ./scripts/feeds install -a
 
@@ -29,16 +29,14 @@ Then configure your firmware image: enable the luci-app-cjdns module, in additio
 
 Then build with `make`. You can append `-j $n`, where n is the number of CPU threads you want to use for compilation.
 
-*Note:* The master branch is for development against OpenWrt Chaos Calmer (trunk). Unless you know what you're doing, you should always use OpenWrt Barrier Breaker (14.07), and the for-14.07 branch of Meshbox.
-
 
 Contact
 -------
 
-- Issue tracker: [github.com/seattlemeshnet/meshbox/issues](https://github.com/seattlemeshnet/meshbox/issues)
-- IRC: #cjdns on EFnet and [HypeIRC](https://wiki.projectmeshnet.org/HypeIRC)
-- Mailing list: [cjdns-openwrt@lists.projectmesh.net](https://lists.projectmesh.net/pipermail/cjdns-openwrt/)
-- Development updates: [lars.berlinmesh.net](http://lars.berlinmesh.net)
+- Issue tracker: [github.com/bostonmeshnet/meshbox/issues](https://github.com/bostonmeshnet/meshbox/issues)
+- IRC: #BostonMeshnet on Freenode
+- Mailing list: [boston@lists.projectmesh.net](https://lists.projectmesh.net/mailman/listinfo/boston)
+- Development updates: [bostonmeshnet.github.io](https://bostonmeshnet.github.io/)
 
 
 Development
@@ -62,7 +60,7 @@ $ ./deploy.sh root@ADDRESS 12345
 This will deploy `cjdns/files`, `cjdns/lua`, and `luci-app-cjdns/luasrc` to the appropriate directories in the container. If your changes require a restart, or the changed code is only run at boot time, you'll need to build your own image.
 
 ```
-$ cd openwrt/
+$ cd lede-source/
 $ vim feeds.conf # src-git meshbox ... => src-link meshbox /path/to/meshbox
 $ ./scripts/feeds update -a
 $ ./feeds/meshbox/docker.sh
@@ -77,6 +75,6 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=master
 ```
 
-Make sure to commit your changes to cjdns before building the package. The OpenWRT buildroot will clone the local cjdns into the build directory, omitting uncommitted changes.
+Make sure to commit your changes to cjdns before building the package. The LEDE buildroot will clone the local cjdns into the build directory, omitting uncommitted changes.
 
 You can then build a fresh container including the changes to cjdns.
