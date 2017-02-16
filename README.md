@@ -1,17 +1,33 @@
 meshbox
 =======
 
-This is the LEDE package feed for the [cjdns][cjdns] routing protocol. It provides LEDE integration and a web-based UI. Tested with LEDE v17.2+
+This is the LEDE package feed for the [cjdns][cjdns] routing protocol. It provides LEDE integration and a web-based UI.
 
 ![UI screenshot](https://github.com/bostonmeshnet/meshbox/blob/for-17.02%2Bterrier/screenshot.png)
 
 [cjdns]: https://github.com/cjdelisle/cjdns
 
 
-Installation
+Building from Source
 ------------
 
-We don't provide prebuilt packages yet (help welcome), so you'll have to build LEDE yourself. Integration into the LEDE buildroot is simple though.
+Note: The package `luci-app-cjdns` is already available upstream via the `routing` feed. You may have to battle between the two feeds when doing `./scripts feeds install -a`
+
+Building meshbox for development
+
+    $ git clone git://git.lede-project.org/source.git lede-source
+    $ cd lede-source
+    $ git clone git@github.com:bostonmeshnet/meshbox.git meshbox
+
+    $ echo "src-link meshbox $PWD/meshbox" | tee feeds.conf
+    $ cat feeds.conf.default | tee -a feeds.conf
+
+    $ ./scripts/feeds update -a
+    $ ./scripts/feeds install -a
+
+
+Building with git as a repo (repeatable builds of latest (or specific) git-revision)
+
 
     $ git clone git://git.lede-project.org/source.git lede-source
     $ cd lede-source
