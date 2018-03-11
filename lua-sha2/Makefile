@@ -1,3 +1,10 @@
+#
+# Copyright (C) 2013-2018 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lua-sha2
@@ -5,10 +12,11 @@ PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_MIRROR_HASH:=79e65bd7cb1b8ef64e125c9e57f40b7d38678599587c1894ce57838814403945
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://code.google.com/p/sha2/
+PKG_SOURCE_URL:=https://github.com/lgierth/lua-sha2.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=02bd4bfdc806
+PKG_SOURCE_VERSION:=02bd4bfdc8062c7e1ae51c5a72906efc0a6375ee
 PKG_LICENSE:=MIT
 
 include $(INCLUDE_DIR)/package.mk
@@ -43,3 +51,4 @@ define Package/lua-sha2/install
 endef
 
 $(eval $(call BuildPackage,lua-sha2))
+
