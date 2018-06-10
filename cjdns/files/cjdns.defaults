@@ -22,8 +22,10 @@ EOF
     exit 1
   fi
 
-  # enable auto-peering on ethernet
-  uci show network.lan | grep bridge >/dev/null 2>&1
+  # enable auto-peering on ethernet interface lan, if existing
+  uci get network.lan | grep interface >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    uci get network.lan.type | grep bridge >/dev/null 2>&1
   if [ $? -eq 0 ]; then
     # most routers will set up an ethernet bridge for the lan
     ifname="br-lan"
@@ -38,6 +40,7 @@ EOF
     set cjdns.@eth_interface[-1].bind=$ifname
 EOF
 
+  fi
   # set the tun interface name
   uci set cjdns.cjdns.tun_device=tuncjdns
 

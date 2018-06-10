@@ -1,12 +1,28 @@
+#
+# Copyright (C) 2014,2015 Hyperboria.net
+#
+# You may redistribute this program and/or modify it under the terms of
+# the GNU General Public License as published by the Free Software Foundation,
+# either version 3 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cjdns
-PKG_VERSION:=0.18
-PKG_RELEASE:=14
+PKG_VERSION:=20.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://github.com/wfleurant/cjdns.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=98cd26805479ee54345b7566948e54ee0c9f86b7
+PKG_SOURCE_VERSION:=meshbox-20.2
 PKG_LICENSE:=GPL-3.0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_SOURCE_VERSION)
@@ -22,7 +38,7 @@ define Package/cjdns
 	TITLE:=Encrypted near-zero-conf mesh routing protocol
 	URL:=https://github.com/cjdelisle/cjdns
 	MAINTAINER:=William Fleurant <Igel@hyperboria.ca>
-	DEPENDS:=+kmod-tun +libnl-tiny +libpthread +librt \
+	DEPENDS:=@IPV6 +kmod-tun +libnl-tiny +libpthread +librt \
 		+libuci-lua +lua-bencode +dkjson +luasocket +lua-sha2
 endef
 
@@ -33,10 +49,24 @@ define Package/cjdns/description
 	of the security and scalability issues that plague existing networks.
 endef
 
+define Package/cjdns-tests
+	SECTION:=net
+	CATEGORY:=Network
+	SUBMENU:=Routing and Redirection
+	TITLE:=cjdns test cases
+	URL:=https://github.com/cjdelisle/cjdns
+	MAINTAINER:=Lars Gierth <larsg@systemli.org>
+	DEPENDS:=+libpthread +librt
+endef
+
+define Package/cjdns-test/description
+	cjdns test cases
+endef
+
 define Build/Configure
 endef
 
-PKG_DO_VARS:=
+PKG_DO_VARS:=CJDNS_RELEASE_VERSION=$(PKG_SOURCE_VERSION)
 
 ifneq ($(CONFIG_KERNEL_SECCOMP_FILTER),y)
 PKG_DO_VARS+= Seccomp_NO=1
@@ -47,16 +77,21 @@ PKG_DO_VARS+= UCLIBC=1
 endif
 
 define Build/Compile
-	cd $(PKG_BUILD_DIR) && \
+	$(INSTALL_DIR) $(PKG_BUILD_DIR)/tmp
+	(cd $(PKG_BUILD_DIR) && \
 	CROSS="true" \
 	CC="$(TARGET_CC)" \
-	CFLAGS="$(TARGET_CFLAGS)" \
+	AR="$(TARGET_AR)" \
+	RANLIB="$(TARGET_RANLIB)" \
+	CFLAGS="$(TARGET_CFLAGS) -U_FORTIFY_SOURCE" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	SYSTEM="linux" \
 	TARGET_ARCH="$(CONFIG_ARCH)" \
 	SSP_SUPPORT="$(CONFIG_SSP_SUPPORT)" \
+	GYP_ADDITIONAL_ARGS="-f make-linux" \
+	CJDNS_BUILD_TMPDIR="$(PKG_BUILD_DIR)/tmp" \
 	$(PKG_DO_VARS) \
-	$(PKG_BUILD_DIR)/do
+	exec ./do)
 endef
 
 define Package/cjdns/install
@@ -103,4 +138,12 @@ if [ -z $${IPKG_INSTROOT} ] ; then
 fi
 endef
 
+define Package/cjdns-tests/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) \
+		$(PKG_BUILD_DIR)/build_linux/test_testcjdroute_c \
+		$(1)/usr/bin
+endef
+
 $(eval $(call BuildPackage,cjdns))
+$(eval $(call BuildPackage,cjdns-tests))
