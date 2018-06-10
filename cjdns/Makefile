@@ -37,7 +37,7 @@ define Package/cjdns
 	SUBMENU:=Routing and Redirection
 	TITLE:=Encrypted near-zero-conf mesh routing protocol
 	URL:=https://github.com/cjdelisle/cjdns
-	MAINTAINER:=William Fleurant <Igel@hyperboria.ca>
+	MAINTAINER:=William Fleurant <william@netblazr.com>
 	DEPENDS:=@IPV6 +kmod-tun +libnl-tiny +libpthread +librt \
 		+libuci-lua +lua-bencode +dkjson +luasocket +lua-sha2
 endef
