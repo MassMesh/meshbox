@@ -42,6 +42,7 @@
 				var version = peer.version;
 			}
 
+			var link = peer.lladdr;
 			var rxtx = lbbytes(peer.bytesIn) + ' / ' + lbbytes(peer.bytesOut);
 
 			var row = table.insertRow(-1);
@@ -50,6 +51,7 @@
 			row.insertCell(-1).textContent = peer.ipv6;
 			row.insertCell(-1).textContent = status;
 			row.insertCell(-1).textContent = version;
+			row.insertCell(-1).textContent = link;
 			row.insertCell(-1).textContent = rxtx;
 			var latencyCell = row.insertCell(-1);
 			latencyCell.textContent = 'waiting';
@@ -106,6 +108,7 @@ function lbbytes (bytes){
 			<th class="cbi-section-table-cell">IPv6</th>
 			<th class="cbi-section-table-cell">Status</th>
 			<th class="cbi-section-table-cell">Version</th>
+			<th class="cbi-section-table-cell">Address</th>
 			<th class="cbi-section-table-cell">Rx / Tx</th>
 			<th class="cbi-section-table-cell">Latency</th>
 		</tr>
