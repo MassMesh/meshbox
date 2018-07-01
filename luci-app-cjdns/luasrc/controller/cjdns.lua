@@ -51,7 +51,7 @@ function act_peers()
 		end
 
 		for i,peer in pairs(response.peers) do
-			peer.ipv6 = publictoip6(peer.publicKey)
+			peer.ipv6 = publictoip6(peer.addr)
 			if peer.user == nil then
 				peer.user = ''
 				uci.cursor():foreach("cjdns", "udp_peer", function(udp_peer)
@@ -97,8 +97,9 @@ function act_ping()
 	luci.http.write_json(response)
 end
 
-function publictoip6(publicKey)
-	local process = io.popen("/usr/bin/publictoip6 " .. publicKey, "r")
+function publictoip6(addrLine)
+	local t = string.sub(addrLine, string.len(addrLine) - 53)
+	local process = io.popen("/usr/bin/publictoip6 " .. t, "r")
 	local ipv6    = process:read()
 	process:close()
 	return ipv6
