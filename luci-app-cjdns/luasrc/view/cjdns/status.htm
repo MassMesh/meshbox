@@ -36,10 +36,10 @@
 
 			var status = interface + ', ' + peer.state.toLowerCase();
 
-			if (peer.version === 0) {
+			if ((peer.version == null) || (typeof peer.version === 'undefined')) {
 				var version = '-';
 			} else {
-				var version = 'v' + peer.version;
+				var version = peer.version;
 			}
 
 			var rxtx = lbbytes(peer.bytesIn) + ' / ' + lbbytes(peer.bytesOut);

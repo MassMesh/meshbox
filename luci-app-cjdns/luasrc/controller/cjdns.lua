@@ -52,6 +52,7 @@ function act_peers()
 
 		for i,peer in pairs(response.peers) do
 			peer.ipv6 = publictoip6(peer.addr)
+			peer.version = pstatver(peer.addr)
 			if peer.user == nil then
 				peer.user = ''
 				uci.cursor():foreach("cjdns", "udp_peer", function(udp_peer)
@@ -103,4 +104,10 @@ function publictoip6(addrLine)
 	local ipv6    = process:read()
 	process:close()
 	return ipv6
+end
+
+function pstatver(addrLine)
+	for str in string.gmatch(addrLine, "([^"..".".."]+)") do
+		if str then return str else return '-' end
+	end
 end
