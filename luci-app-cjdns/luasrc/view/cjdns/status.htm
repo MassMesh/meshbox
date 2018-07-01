@@ -56,7 +56,7 @@
 
 			var pingURI = '<%=luci.dispatcher.build_url("admin", "services", "cjdns", "ping")%>';
 			var timeout = 2000;
-			XHR.get(pingURI, { label: peer.switchLabel, timeout: timeout }, function(x, pong) {
+			XHR.get(pingURI, { label: peer.label, timeout: timeout }, function(x, pong) {
 				var pongrsp = ((pong.err == "ai:recv > timeout") || (pong == "undefined") || (pong.ms >= timeout))
 					? '> ' + timeout + ' ms'
 					: pong.ms + ' ms';
