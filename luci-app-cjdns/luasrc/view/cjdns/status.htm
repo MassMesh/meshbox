@@ -34,9 +34,9 @@
 				var interface = 'incoming';
 			}
 
-			var status = interface + ', ' + peer.state.toLowerCase();
+			var status = peer.state.toLowerCase();
 
-			if ((peer.version == null) || (typeof peer.version === 'undefined')) {
+			if ((typeof peer.version === 'undefined') || (peer.version == false)) {
 				var version = '-';
 			} else {
 				var version = peer.version;
@@ -47,9 +47,9 @@
 
 			var row = table.insertRow(-1);
 			row.className = 'cbi-section-table-row cbi-rowstyle-' + ((i % 2) + 1);
-			row.insertCell(-1).textContent = user;
-			row.insertCell(-1).textContent = peer.ipv6;
 			row.insertCell(-1).textContent = status;
+			row.insertCell(-1).textContent = (user == "outer") ? interface : user;
+			row.insertCell(-1).textContent = peer.ipv6;
 			row.insertCell(-1).textContent = version;
 			row.insertCell(-1).textContent = link;
 			row.insertCell(-1).textContent = rxtx;
@@ -59,10 +59,9 @@
 			var pingURI = '<%=luci.dispatcher.build_url("admin", "services", "cjdns", "ping")%>';
 			var timeout = 2000;
 			XHR.get(pingURI, { label: peer.label, timeout: timeout }, function(x, pong) {
-				var pongrsp = ((pong.err == "ai:recv > timeout") || (pong == "undefined") || (pong.ms >= timeout))
-					? '> ' + timeout + ' ms'
+				latencyCell.textContent = ((pong.err == "ai:recv > timeout") || (pong == "undefined") || (pong.ms >= timeout))
+					? 'waiting'
 					: pong.ms + ' ms';
-				latencyCell.textContent = pongrsp;
 			})
 		});
 
@@ -104,9 +103,9 @@ function lbbytes (bytes){
 	<legend>Active cjdns peers</legend>
 	<table class="cbi-section-table" id="cjdns-peerings">
 		<tr class="cbi-section-table-titles">
+			<th class="cbi-section-table-cell">Status</th>
 			<th class="cbi-section-table-cell">User/Name</th>
 			<th class="cbi-section-table-cell">IPv6</th>
-			<th class="cbi-section-table-cell">Status</th>
 			<th class="cbi-section-table-cell">Version</th>
 			<th class="cbi-section-table-cell">Address</th>
 			<th class="cbi-section-table-cell">Rx / Tx</th>
